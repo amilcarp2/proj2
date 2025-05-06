@@ -113,15 +113,16 @@
             download: true,
             header: true,
             complete: function(results) {
-                const metrics = ['On_Time_Delivery_Score', 'Customer_Rating', 'Fuel_Efficiency', 'Safety_Score'];
+                const metrics = ['On Time Delivery Score', 'Customer Rating', 'Fuel Efficiency', 'Safety Score'];
                 const cleanData = results.data.filter(row =>
-                    metrics.every(metric => !isNaN(parseFloat(row[metric])))
+                    metrics.every(label => !isNaN(parseFloat(row[label.replace(/ /g, '_')])))
                 );
-                const avg = metrics.map(metric => {
-                    const values = cleanData.map(row => parseFloat(row[metric]));
-                    let avgValue = values.reduce((a, b) => a + b, 0) / values.length;
-                    return metric === 'Customer_Rating' ? avgValue * 2 : avgValue;
-                });
+                const avg = metrics.map(label => {
+    const key = label.replace(/ /g, '_');
+    const values = cleanData.map(row => parseFloat(row[key]));
+    let avgValue = values.reduce((a, b) => a + b, 0) / values.length;
+    return label === 'Customer Rating' ? avgValue * 2 : avgValue;
+});
 
                 new Chart(document.getElementById('driverChart'), {
                     type: 'polarArea',
