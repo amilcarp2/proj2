@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <!-- Row 2: Radar + Doughnut + Scatter -->
+        <!-- Row 2: Polar + Doughnut + Scatter -->
         <div class="row mb-4">
             <div class="col-md-4">
                 <div class="card">
@@ -107,25 +107,28 @@
             }
         });
 
-        // Radar chart
+        // Polar area chart (Driver Performance)
         Papa.parse('DriverPerformance.csv', {
             download: true,
             header: true,
             complete: function(results) {
                 const metrics = ['On_Time_Delivery_Score', 'Customer_Rating', 'Fuel_Efficiency', 'Safety_Score'];
+                const cleanData = results.data.filter(row =>
+                    metrics.every(metric => !isNaN(parseFloat(row[metric])))
+                );
                 const avg = metrics.map(metric => {
-                    const values = results.data.map(row => parseFloat(row[metric]));
+                    const values = cleanData.map(row => parseFloat(row[metric]));
                     return values.reduce((a, b) => a + b, 0) / values.length;
                 });
+
                 new Chart(document.getElementById('driverChart'), {
-                    type: 'radar',
+                    type: 'polarArea',
                     data: {
                         labels: metrics,
                         datasets: [{
-                            label: 'Avg Score',
+                            label: 'Average Metrics',
                             data: avg,
-                            backgroundColor: 'rgba(0, 123, 255, 0.3)',
-                            borderColor: 'blue'
+                            backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
                         }]
                     }
                 });
