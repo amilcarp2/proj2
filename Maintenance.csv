@@ -1,0 +1,31 @@
+Vehicle_ID,Maintenance_Type,Status,Cost,Date
+V14,Tires,Complete,980.06,2024-05-13
+V14,Brakes,Complete,529.47,2024-06-14
+V16,Brakes,Pending,164.0,2025-01-28
+V25,Battery,Complete,785.39,2025-01-27
+V2,Battery,Pending,545.55,2024-10-12
+V11,Brakes,Complete,494.4,2025-01-09
+V20,Brakes,Pending,243.36,2024-06-26
+V24,Engine Repair,Pending,505.19,2024-05-15
+V17,Oil Change,Pending,720.95,2024-12-26
+V5,Oil Change,Pending,819.92,2025-02-19
+V23,Oil Change,Complete,388.92,2024-06-25
+V21,Brakes,Pending,436.2,2025-04-16
+V30,Tires,Complete,365.03,2024-05-10
+V24,Engine Repair,Pending,126.89,2024-09-27
+V5,Tires,Pending,850.09,2024-08-15
+V19,Tires,Pending,472.36,2025-04-20
+V10,Oil Change,Complete,219.13,2024-09-24
+V21,Tires,Pending,885.65,2024-10-24
+V24,Brakes,Pending,514.97,2024-08-01
+V17,Battery,Pending,567.24,2025-04-15
+V11,Engine Repair,Complete,738.43,2024-06-05
+V24,Battery,Complete,239.24,2024-08-04
+V8,Oil Change,Complete,225.33,2025-02-24
+V24,Brakes,Complete,258.98,2025-04-30
+V23,Brakes,Pending,397.24,2025-01-24
+V17,Oil Change,Pending,238.44,2024-09-11
+V21,Oil Change,Pending,377.71,2024-12-04
+V15,Engine Repair,Complete,134.68,2024-08-26
+V28,Brakes,Complete,867.65,2025-04-08
+V7,Oil Change,Complete,751.84,2024-12-25

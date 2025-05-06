@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Logistics Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Fleet Logistics Dashboard</h1>
+
+        <!-- Row 1: Line + Pie -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Monthly Deliveries</h5>
+                        <canvas id="deliveriesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Vehicle Type Distribution</h5>
+                        <canvas id="fleetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Radar + Doughnut + Scatter -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Driver Performance Metrics</h5>
+                        <canvas id="driverChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Maintenance Status</h5>
+                        <canvas id="maintenanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Fuel vs Distance</h5>
+                        <canvas id="fuelChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <script>
+        // Line chart
+        Papa.parse('Deliveries.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const labels = results.data.map(row => row.Date);
+                const data = results.data.map(row => parseInt(row.Total_Deliveries));
+                new Chart(document.getElementById('deliveriesChart'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Deliveries',
+                            data: data,
+                            borderColor: 'blue',
+                            fill: false
+                        }]
+                    }
+                });
+            }
+        });
+
+        // Pie chart
+        Papa.parse('FleetComposition.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const labels = results.data.map(row => row.Vehicle_Type);
+                const data = results.data.map(row => parseInt(row.Count));
+                new Chart(document.getElementById('fleetChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: ['red', 'green', 'blue', 'orange', 'purple']
+                        }]
+                    }
+                });
+            }
+        });
+
+        // Radar chart
+        Papa.parse('DriverPerformance.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const metrics = ['On_Time_Delivery_Score', 'Customer_Rating', 'Fuel_Efficiency', 'Safety_Score'];
+                const avg = metrics.map(metric => {
+                    const values = results.data.map(row => parseFloat(row[metric]));
+                    return values.reduce((a, b) => a + b, 0) / values.length;
+                });
+                new Chart(document.getElementById('driverChart'), {
+                    type: 'radar',
+                    data: {
+                        labels: metrics,
+                        datasets: [{
+                            label: 'Avg Score',
+                            data: avg,
+                            backgroundColor: 'rgba(0, 123, 255, 0.3)',
+                            borderColor: 'blue'
+                        }]
+                    }
+                });
+            }
+        });
+
+        // Doughnut chart
+        Papa.parse('Maintenance.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const statusCounts = {};
+                results.data.forEach(row => {
+                    if (row.Status) {
+                        statusCounts[row.Status] = (statusCounts[row.Status] || 0) + 1;
+                    }
+                });
+                new Chart(document.getElementById('maintenanceChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(statusCounts),
+                        datasets: [{
+                            data: Object.values(statusCounts),
+                            backgroundColor: ['#ffc107', '#28a745']
+                        }]
+                    }
+                });
+            }
+        });
+
+        // Scatter chart
+        Papa.parse('FuelDistance.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const points = results.data.map(row => ({
+                    x: parseFloat(row.Distance_km),
+                    y: parseFloat(row.Fuel_Consumed_Liters)
+                }));
+                new Chart(document.getElementById('fuelChart'), {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Fuel vs Distance',
+                            data: points,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { title: { display: true, text: 'Distance (km)' } },
+                            y: { title: { display: true, text: 'Fuel (L)' } }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
